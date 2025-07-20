@@ -1,7 +1,12 @@
 type User = { id: string; name: string };
 
 // Imaginary database
-const users: User[] = [];
+const users: User[] = [
+    {
+        name: "Ben",
+        id: "1",
+    },
+];
 export const db = {
     user: {
         findMany: async () => users,
