@@ -1,14 +1,10 @@
 {
     "name": "server",
     "private": true,
-    "scripts": {
-        "build": "tsc",
-        "dev": "tsx watch index.ts",
-        "lint": "eslint --cache index.ts",
-        "start": "node dist/index.js"
-    },
+    "scripts": {},
     "dependencies": {
         "@trpc/server": "npm:@trpc/server",
+        "@types/aws-lambda": "^8.10.152",
         "cors": "^2.8.5",
         "zod": "^3.25.51"
     },

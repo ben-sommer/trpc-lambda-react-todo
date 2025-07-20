@@ -6,15 +6,7 @@
     "server"
   ],
   "scripts": {
-    "build:client": "bun build -w client",
-    "build:server": "bun build -w server",
-    "build": "run-s build:server build:client",
-    "dev:client": "bun dev -w client",
-    "dev:server": "bun dev -w server",
-    "dev": "run-p dev:*",
-    "start:client": "bun start -w client",
-    "start:server": "bun start -w server",
-    "start": "run-p start:*",
+    "dev": "vite dev client",
     "prepare": "husky"
   },
   "devDependencies": {
@@ -28,5 +20,8 @@
   "version": "0.0.1",
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
+  },
+  "dependencies": {
+    "sst": "^3.17.10"
   }
 }

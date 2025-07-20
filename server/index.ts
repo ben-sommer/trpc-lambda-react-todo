@@ -3,6 +3,7 @@ import { z } from "zod";
 import { db } from "./db";
 import { publicProcedure, router } from "./trpc";
 import cors from "cors";
+import { awsLambdaRequestHandler } from "@trpc/server/adapters/aws-lambda";
 
 const appRouter = router({
     userList: publicProcedure.query(async () => {
@@ -23,11 +24,9 @@ const appRouter = router({
         }),
 });
 
-export type AppRouter = typeof appRouter;
-
-const server = createHTTPServer({
-    middleware: cors(),
+export const handler = awsLambdaRequestHandler({
     router: appRouter,
+    createContext: (opts) => opts,
 });
 
-server.listen(3000);
+export type AppRouter = typeof appRouter;
