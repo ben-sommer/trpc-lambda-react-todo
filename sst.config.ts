@@ -16,9 +16,19 @@ export default $config({
         };
     },
     async run() {
+        const todoTable = new sst.aws.Dynamo("Todo", {
+            fields: {
+                userId: "string",
+            },
+            primaryIndex: {
+                hashKey: "userId",
+            },
+        });
+
         const server = new sst.aws.Function("TrpcServer", {
             url: true,
             handler: "server/index.handler",
+            link: [todoTable],
         });
 
         const client = new sst.aws.StaticSite("ViteClient", {

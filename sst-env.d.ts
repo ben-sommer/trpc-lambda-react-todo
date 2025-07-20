@@ -5,6 +5,10 @@
 
 declare module "sst" {
   export interface Resource {
+    "Todo": {
+      "name": string
+      "type": "sst.aws.Dynamo"
+    }
     "TrpcServer": {
       "name": string
       "type": "sst.aws.Function"

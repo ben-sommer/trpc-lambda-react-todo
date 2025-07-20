@@ -3,9 +3,11 @@
     "private": true,
     "scripts": {},
     "dependencies": {
+        "@aws-sdk/client-dynamodb": "^3.848.0",
         "@trpc/server": "npm:@trpc/server",
         "@types/aws-lambda": "^8.10.152",
         "cors": "^2.8.5",
+        "electrodb": "^3.4.3",
         "zod": "^3.25.51"
     },
     "devDependencies": {
