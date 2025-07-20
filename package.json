@@ -6,6 +6,7 @@
     "server"
   ],
   "scripts": {
+    "build:client": "vite build client",
     "dev": "vite dev client",
     "prepare": "husky"
   },

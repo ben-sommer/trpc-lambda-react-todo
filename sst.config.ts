@@ -37,7 +37,7 @@ export default $config({
             },
             build: {
                 command: "npm run build:client",
-                output: "dist",
+                output: "client/dist",
             },
         });
 
