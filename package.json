@@ -1,0 +1,26 @@
+{
+    "name": "trpc-lambda-react-todo",
+    "private": true,
+    "workspaces": [
+        "client",
+        "server"
+    ],
+    "scripts": {
+        "build:client": "bun build -w client",
+        "build:server": "bun build -w server",
+        "build": "run-s build:server build:client",
+        "dev:client": "bun dev -w client",
+        "dev:server": "bun dev -w server",
+        "dev": "run-p dev:*",
+        "start:client": "bun start -w client",
+        "start:server": "bun start -w server",
+        "start": "run-p start:*"
+    },
+    "devDependencies": {
+        "npm-run-all": "^4.1.5",
+        "prettier": "3.6.2",
+        "start-server-and-test": "^1.12.0",
+        "wait-port": "^1.0.1"
+    },
+    "version": "0.0.1"
+}
