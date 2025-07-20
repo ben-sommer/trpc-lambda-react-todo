@@ -5,14 +5,9 @@ export default function UserList() {
     const usersQuery = useQuery(trpc.user.getAllUsers.queryOptions());
     const userCreator = useMutation(
         trpc.user.addUser.mutationOptions({
-            onSuccess: (data) => {
+            onSuccess: () => {
                 queryClient.invalidateQueries(
                     trpc.user.getAllUsers.queryOptions(),
-                );
-                queryClient.invalidateQueries(
-                    trpc.user.getUser.queryFilter({
-                        userId: data.userId,
-                    }),
                 );
             },
         }),
