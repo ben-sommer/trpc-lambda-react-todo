@@ -68,6 +68,12 @@ function Login() {
                                 : !EMAIL_REGEX.test(value)
                                   ? "Please check your email is correct"
                                   : undefined,
+                        onMount: ({ value }) =>
+                            !value
+                                ? "Please enter your email"
+                                : !EMAIL_REGEX.test(value)
+                                  ? "Please check your email is correct"
+                                  : undefined,
                     }}
                     children={(field) => (
                         <>
@@ -91,6 +97,12 @@ function Login() {
                     name="password"
                     validators={{
                         onChange: ({ value }) =>
+                            !value
+                                ? "Please enter your password"
+                                : !PASSWORD_REGEX.test(value)
+                                  ? "Please choose a stronger password"
+                                  : undefined,
+                        onMount: ({ value }) =>
                             !value
                                 ? "Please enter your password"
                                 : !PASSWORD_REGEX.test(value)
