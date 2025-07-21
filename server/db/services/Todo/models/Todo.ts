@@ -2,11 +2,11 @@ import { Entity } from "electrodb";
 import { client } from "@db/config";
 import { SERVICE_NAME, TABLE_NAME } from "../constants";
 
-export const User = new Entity(
+export const Todo = new Entity(
     {
         model: {
             service: SERVICE_NAME,
-            entity: "User",
+            entity: "Todo",
             version: "1",
         },
         attributes: {
@@ -14,8 +14,16 @@ export const User = new Entity(
                 type: "string",
                 required: true,
             },
-            name: {
+            todoId: {
                 type: "string",
+                required: true,
+            },
+            title: {
+                type: "string",
+                required: true,
+            },
+            completed: {
+                type: "boolean",
                 required: true,
             },
             createdAt: {
@@ -34,11 +42,15 @@ export const User = new Entity(
             },
         },
         indexes: {
-            userById: {
+            todoByUser: {
                 // collection: "todos",
                 pk: {
                     field: "pk",
                     composite: ["userId"],
+                },
+                sk: {
+                    field: "sk",
+                    composite: ["createdAt", "todoId"],
                 },
             },
         },

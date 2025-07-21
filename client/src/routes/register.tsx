@@ -53,7 +53,7 @@ function Register() {
             password: "",
         },
         onSubmit: async ({ value }) => {
-            await registerMutation.mutate({
+            await registerMutation.mutateAsync({
                 username: value.email,
                 password: value.password,
             });
@@ -132,10 +132,7 @@ function Register() {
                     )}
                 />
                 <form.Subscribe
-                    selector={(state) => [
-                        state.canSubmit && !state.isPristine,
-                        state.isSubmitting,
-                    ]}
+                    selector={(state) => [state.canSubmit, state.isSubmitting]}
                     children={([canSubmit, isSubmitting]) => (
                         <Button
                             type="submit"

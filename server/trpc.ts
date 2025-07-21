@@ -6,7 +6,7 @@ import {
 } from "aws-lambda";
 
 export type Context = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2> & {
-    user?: {
+    user: {
         email: string;
         userId: string;
     };

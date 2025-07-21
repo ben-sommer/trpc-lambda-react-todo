@@ -17,10 +17,12 @@ export default $config({
         /* ----- Database ----- */
         const todoTable = new sst.aws.Dynamo("Todo", {
             fields: {
-                userId: "string",
+                pk: "string",
+                sk: "string",
             },
             primaryIndex: {
-                hashKey: "userId",
+                hashKey: "pk",
+                rangeKey: "sk",
             },
         });
 
@@ -62,7 +64,7 @@ export default $config({
         });
 
         api.route("OPTIONS /{proxy+}", {
-            handler: "server/index.options",
+            handler: "server/cors.handler",
             link: [todoTable],
         });
 

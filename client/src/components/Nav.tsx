@@ -11,7 +11,7 @@ export default function Nav() {
     return (
         <div className="bg-gray-300">
             <div className="mx-auto flex w-full max-w-[600px] items-center justify-between gap-2 px-[10px]">
-                <p>Todo App</p>
+                <p className="text-xl font-bold">Todo App</p>
                 <div className="flex gap-2 p-2">
                     <Link to="/" className="[&.active]:font-bold">
                         Home

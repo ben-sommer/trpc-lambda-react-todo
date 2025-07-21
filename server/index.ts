@@ -5,9 +5,11 @@ import {
 } from "@trpc/server/adapters/aws-lambda";
 import { userRouter } from "./routers/user";
 import { APIGatewayProxyEventV2WithJWTAuthorizer } from "aws-lambda";
+import { todoRouter } from "./routers/todo";
 
 const appRouter = router({
     user: userRouter,
+    todo: todoRouter,
 });
 
 export const handler = awsLambdaRequestHandler({
@@ -31,15 +33,6 @@ export const handler = awsLambdaRequestHandler({
                 userId: user.jwt.claims.sub as string,
             },
         };
-    },
-});
-
-export const options = () => ({
-    statusCode: 204,
-    headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "*",
-        "Access-Control-Allow-Methods": "*",
     },
 });
 
