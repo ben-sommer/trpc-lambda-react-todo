@@ -5,14 +5,17 @@
 
 declare module "sst" {
   export interface Resource {
+    "Api": {
+      "type": "sst.aws.ApiGatewayV2"
+      "url": string
+    }
+    "IdentityPool": {
+      "id": string
+      "type": "sst.aws.CognitoIdentityPool"
+    }
     "Todo": {
       "name": string
       "type": "sst.aws.Dynamo"
-    }
-    "TrpcServer": {
-      "name": string
-      "type": "sst.aws.Function"
-      "url": string
     }
     "ViteClient": {
       "type": "sst.aws.StaticSite"

@@ -1,5 +1,3 @@
-// import * as sst from 'sst';
-
 /// <reference path=".sst/platform/config.d.ts" />
 
 export default $config({
@@ -16,6 +14,7 @@ export default $config({
         };
     },
     async run() {
+        /* ----- Database ----- */
         const todoTable = new sst.aws.Dynamo("Todo", {
             fields: {
                 userId: "string",
@@ -25,15 +24,51 @@ export default $config({
             },
         });
 
-        const server = new sst.aws.Function("TrpcServer", {
-            url: true,
+        /* ----- Auth ----- */
+
+        const userPool = new aws.cognito.UserPool("UserPool");
+
+        const userPoolClient = new aws.cognito.UserPoolClient(
+            "UserPoolClient",
+            {
+                userPoolId: userPool.id,
+            },
+        );
+
+        const identityPool = new sst.aws.CognitoIdentityPool("IdentityPool", {
+            userPools: [
+                {
+                    userPool: userPool.id,
+                    client: userPoolClient.id,
+                },
+            ],
+        });
+
+        /* ----- API ----- */
+
+        const api = new sst.aws.ApiGatewayV2("Api");
+
+        const authorizer = api.addAuthorizer({
+            name: "CognitoAuthorizer",
+            jwt: {
+                issuer: $interpolate`https://cognito-idp.${aws.getRegionOutput().name}.amazonaws.com/${userPool.id}`,
+                audiences: [userPoolClient.id],
+            },
+        });
+
+        const server = api.route("$default", {
             handler: "server/index.handler",
             link: [todoTable],
         });
 
+        /* ----- Frontend ----- */
+
         const client = new sst.aws.StaticSite("ViteClient", {
             environment: {
-                VITE_TRPC_SERVER_URL: server.url,
+                VITE_TRPC_SERVER_URL: api.url,
+                VITE_COGNITO_USER_POOL_ID: userPool.id,
+                VITE_COGNITO_USER_POOL_CLIENT_ID: userPoolClient.id,
+                VITE_COGNITO_IDENTITY_POOL_ID: identityPool.id,
             },
             build: {
                 command: "npm run build:client",

@@ -14,14 +14,13 @@ export default function UserList() {
     );
 
     if (usersQuery.isLoading) return <p>Loading...</p>;
-    if (usersQuery.isError) return <p>Error: {usersQuery.error.message}</p>;
-
-    const users = usersQuery.data!;
+    if (usersQuery.isError || usersQuery.data === undefined)
+        return <p>Error: {usersQuery.error?.message || "An error occured"}</p>;
 
     return (
         <div>
             <div>
-                {users.map((user) => (
+                {usersQuery.data.map((user) => (
                     <p key={user.userId}>{user.name}</p>
                 ))}
             </div>
