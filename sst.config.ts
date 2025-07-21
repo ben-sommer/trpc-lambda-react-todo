@@ -25,15 +25,14 @@ export default $config({
         });
 
         /* ----- Auth ----- */
-
-        const userPool = new aws.cognito.UserPool("UserPool");
-
-        const userPoolClient = new aws.cognito.UserPoolClient(
-            "UserPoolClient",
-            {
-                userPoolId: userPool.id,
+        const userPool = new sst.aws.CognitoUserPool("UserPool", {
+            triggers: {
+                preSignUp: "server/auth/preSignUp.handler",
             },
-        );
+            usernames: ["email"],
+        });
+
+        const userPoolClient = userPool.addClient("UserPoolClient");
 
         const identityPool = new sst.aws.CognitoIdentityPool("IdentityPool", {
             userPools: [

@@ -1,17 +1,18 @@
-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
+import Nav from "@/components/Nav";
+import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "../lib/trpc";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import "../index.css";
 
 export const Route = createRootRoute({
     component: () => (
-        <>
-            <div className="p-2 flex gap-2">
-                <Link to="/t3" className="[&.active]:font-bold">
-                    Home
-                </Link>
-            </div>
-            <hr />
+        <QueryClientProvider client={queryClient}>
+            <Nav />
             <Outlet />
             <TanStackRouterDevtools />
-        </>
+            <ReactQueryDevtools />
+        </QueryClientProvider>
     ),
 });

@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import "../index.css";
+import "../lib/auth";
 
 export const Route = createFileRoute("/")({
     component: Index,

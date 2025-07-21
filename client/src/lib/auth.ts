@@ -4,6 +4,7 @@ import {
     COGNITO_IDENTITY_POOL_ID,
     COGNITO_USER_POOL_CLIENT_ID,
 } from "./env";
+import { getCurrentUser } from "aws-amplify/auth";
 
 Amplify.configure({
     Auth: {
@@ -31,3 +32,12 @@ Amplify.configure({
         },
     },
 });
+
+export const getIsAuthenticated = async () => {
+    try {
+        await getCurrentUser();
+        return true;
+    } catch {
+        return false;
+    }
+};

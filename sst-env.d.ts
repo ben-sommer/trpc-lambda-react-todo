@@ -17,6 +17,15 @@ declare module "sst" {
       "name": string
       "type": "sst.aws.Dynamo"
     }
+    "UserPool": {
+      "id": string
+      "type": "sst.aws.CognitoUserPool"
+    }
+    "UserPoolClient": {
+      "id": string
+      "secret": string
+      "type": "sst.aws.CognitoUserPoolClient"
+    }
     "ViteClient": {
       "type": "sst.aws.StaticSite"
       "url": string
