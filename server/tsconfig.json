@@ -1,8 +1,6 @@
 {
     "compilerOptions": {
-        "lib": [
-            "es2023"
-        ],
+        "lib": ["es2023"],
         "module": "nodenext",
         "target": "es2022",
         "strict": true,
@@ -11,9 +9,7 @@
         "moduleResolution": "node16",
         "outDir": "dist",
         "paths": {
-            "@db/*": [
-                "./db/*",
-            ]
+            "@db/*": ["./db/*"]
         }
     }
 }
