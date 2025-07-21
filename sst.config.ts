@@ -45,15 +45,21 @@ export default $config({
 
         /* ----- API ----- */
 
-        const api = new sst.aws.ApiGatewayV2("Api");
-
-        const authorizer = api.addAuthorizer({
-            name: "CognitoAuthorizer",
-            jwt: {
-                issuer: $interpolate`https://cognito-idp.${aws.getRegionOutput().name}.amazonaws.com/${userPool.id}`,
-                audiences: [userPoolClient.id],
-            },
+        const api = new sst.aws.ApiGatewayV2("Api", {
+            // cors: {
+            //     allowHeaders: ["*"],
+            //     allowMethods: ["*"],
+            //     allowOrigins: ["*"],
+            // },
         });
+
+        // const authorizer = api.addAuthorizer({
+        //     name: "CognitoAuthorizer",
+        //     jwt: {
+        //         issuer: $interpolate`https://cognito-idp.${aws.getRegionOutput().name}.amazonaws.com/${userPool.id}`,
+        //         audiences: [userPoolClient.id],
+        //     },
+        // });
 
         const server = api.route("$default", {
             handler: "server/index.handler",
