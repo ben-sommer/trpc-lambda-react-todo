@@ -1,6 +1,5 @@
 import { User } from "@db/services/Todo/models/User";
 import { publicProcedure } from "../../trpc";
-import { EntityItem } from "electrodb";
 
 type UserResponse = {
     userId: string;

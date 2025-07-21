@@ -1,23 +1,46 @@
 import { router } from "./trpc";
-import { awsLambdaRequestHandler } from "@trpc/server/adapters/aws-lambda";
+import {
+    awsLambdaRequestHandler,
+    CreateAWSLambdaContextOptions,
+} from "@trpc/server/adapters/aws-lambda";
 import { userRouter } from "./routers/user";
-import { APIGatewayProxyEvent, Context } from "aws-lambda";
+import { APIGatewayProxyEventV2WithJWTAuthorizer } from "aws-lambda";
 
 const appRouter = router({
     user: userRouter,
 });
 
-export const handler = (event: APIGatewayProxyEvent) =>
-    awsLambdaRequestHandler({
-        router: appRouter,
-        // createContext: (opts) => {
-        //     if (!("authorizer" in opts.event.requestContext))
-        //         throw new Error("Authorizer not present in request!");
+export const handler = awsLambdaRequestHandler({
+    router: appRouter,
+    createContext: ({
+        event,
+        context,
+        info,
+    }: CreateAWSLambdaContextOptions<APIGatewayProxyEventV2WithJWTAuthorizer>) => {
+        if (!("authorizer" in event.requestContext))
+            throw new Error("Authorizer not present in request!");
 
-        //     const user = opts.event.requestContext.authorizer;
+        const user = event.requestContext.authorizer;
 
-        //     return { ...opts, user };
-        // },
-    });
+        return {
+            event,
+            context,
+            info,
+            user: {
+                email: user.jwt.claims.email as string,
+                userId: user.jwt.claims.sub as string,
+            },
+        };
+    },
+});
+
+export const options = () => ({
+    statusCode: 204,
+    headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "*",
+        "Access-Control-Allow-Methods": "*",
+    },
+});
 
 export type AppRouter = typeof appRouter;

@@ -46,25 +46,40 @@ export default $config({
         /* ----- API ----- */
 
         const api = new sst.aws.ApiGatewayV2("Api", {
-            // cors: {
-            //     allowHeaders: ["*"],
-            //     allowMethods: ["*"],
-            //     allowOrigins: ["*"],
-            // },
+            cors: {
+                allowHeaders: ["*"],
+                allowMethods: ["*"],
+                allowOrigins: ["*"],
+            },
         });
 
-        // const authorizer = api.addAuthorizer({
-        //     name: "CognitoAuthorizer",
-        //     jwt: {
-        //         issuer: $interpolate`https://cognito-idp.${aws.getRegionOutput().name}.amazonaws.com/${userPool.id}`,
-        //         audiences: [userPoolClient.id],
-        //     },
-        // });
+        const authorizer = api.addAuthorizer({
+            name: "CognitoAuthorizer",
+            jwt: {
+                issuer: $interpolate`https://cognito-idp.${aws.getRegionOutput().name}.amazonaws.com/${userPool.id}`,
+                audiences: [userPoolClient.id],
+            },
+        });
 
-        const server = api.route("$default", {
-            handler: "server/index.handler",
+        api.route("OPTIONS /{proxy+}", {
+            handler: "server/index.options",
             link: [todoTable],
         });
+
+        const server = api.route(
+            "$default",
+            {
+                handler: "server/index.handler",
+                link: [todoTable],
+            },
+            {
+                auth: {
+                    jwt: {
+                        authorizer: authorizer.id,
+                    },
+                },
+            },
+        );
 
         /* ----- Frontend ----- */
 
