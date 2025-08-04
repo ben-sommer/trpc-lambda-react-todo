@@ -14,7 +14,7 @@ export default function Nav() {
                 <p className="text-xl font-bold">Todo App</p>
                 <div className="flex gap-2 p-2">
                     <Link to="/" className="[&.active]:font-bold">
-                        Home
+                        Todos
                     </Link>
                     {!isLoading && isAuthenticated ? (
                         <Link to="/logout" className="[&.active]:font-bold">

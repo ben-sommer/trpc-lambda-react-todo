@@ -62,7 +62,7 @@ function Register() {
 
     return (
         <div className="p-2">
-            <div className="flex max-w-[320px] flex-col gap-[16px]">
+            <div className="mx-auto flex max-w-[320px] flex-col gap-[16px]">
                 <form.Field
                     name="email"
                     validators={{
