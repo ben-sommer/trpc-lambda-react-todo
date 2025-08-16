@@ -1,21 +1,21 @@
 import { Todo } from "@db/services/Todo/models/Todo";
-import { publicProcedure } from "../../trpc";
+import { authenticatedProcedure } from "../../trpc";
+import { TRPCError } from "@trpc/server";
+import { todoItemToResponse, TodoResponse } from ".";
 
-type TodoResponse = {
-    userId: string;
-    todoId: string;
-    title: string;
-    completed: boolean;
-    createdAt: string;
-    updatedAt: string;
-};
+export default authenticatedProcedure.query<TodoResponse[]>(async ({ ctx }) => {
+    try {
+        const userResponse = await Todo.query
+            .todoByUser({
+                userId: ctx.user.userId,
+            })
+            .go();
 
-export default publicProcedure.query(async (args) => {
-    const userResponse = await Todo.query
-        .todoByUser({
-            userId: args.ctx.user.userId,
-        })
-        .go();
-
-    return userResponse.data as TodoResponse[];
+        return userResponse.data.map(todoItemToResponse);
+    } catch (error) {
+        throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: error instanceof Error ? error.message : "Unknown error",
+        });
+    }
 });

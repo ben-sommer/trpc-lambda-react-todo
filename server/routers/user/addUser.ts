@@ -1,22 +1,32 @@
 import { User } from "@db/services/Todo/models/User";
-import { publicProcedure } from "../../trpc";
+import { authenticatedProcedure } from "../../trpc";
 import z from "zod";
-import { userRouter } from ".";
-import { EntityItem } from "electrodb";
+import { CreateEntityItem, EntityItem } from "electrodb";
+import { TRPCError } from "@trpc/server";
+import { UserResponse } from ".";
+import { userItemToResponse } from ".";
 
-export default publicProcedure
+export default authenticatedProcedure
     .input(
         z.object({
             name: z.string(),
         }),
     )
-    .mutation(async (args) => {
-        const newUser: EntityItem<typeof User> = {
-            userId: crypto.randomUUID(),
-            name: args.input.name,
-        };
+    .mutation<UserResponse>(async ({ input }) => {
+        try {
+            const newUser: CreateEntityItem<typeof User> = {
+                userId: crypto.randomUUID(),
+                name: input.name,
+            };
 
-        await User.create(newUser).go();
+            const createUserResponse = await User.create(newUser).go();
 
-        return newUser;
+            return userItemToResponse(createUserResponse.data);
+        } catch (error) {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message:
+                    error instanceof Error ? error.message : "Unknown error",
+            });
+        }
     });

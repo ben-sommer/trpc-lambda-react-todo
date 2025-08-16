@@ -1,22 +1,38 @@
 import { User } from "@db/services/Todo/models/User";
-import { publicProcedure } from "../../trpc";
+import { authenticatedProcedure } from "../../trpc";
 import z from "zod";
+import { TRPCError } from "@trpc/server";
+import { userItemToResponse, UserResponse } from ".";
 
-type UserResponse = {
-    userId: string;
-    name: string;
-};
-
-export default publicProcedure
+export default authenticatedProcedure
     .input(
         z.object({
             userId: z.string(),
         }),
     )
-    .query(async (args) => {
-        const userResponse = await User.get({
-            userId: args.input.userId,
-        }).go();
+    .query<UserResponse>(async ({ input }) => {
+        try {
+            const userResponse = await User.get({
+                userId: input.userId,
+            }).go();
 
-        return userResponse.data as UserResponse;
+            if (userResponse.data === null) {
+                throw new TRPCError({
+                    code: "NOT_FOUND",
+                    message: "User not found",
+                });
+            }
+
+            return userItemToResponse(userResponse.data);
+        } catch (error) {
+            if (error instanceof TRPCError) {
+                throw error;
+            }
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message:
+                    error instanceof Error ? error.message : "Unknown error",
+            });
+        }
     });

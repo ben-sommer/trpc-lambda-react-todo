@@ -1,17 +1,11 @@
-import { publicProcedure } from "../../trpc";
+import { authenticatedProcedure } from "../../trpc";
 import z from "zod";
 import { Todo } from "@db/services/Todo/models/Todo";
+import { TRPCError } from "@trpc/server";
+import { todoItemToResponse, TodoResponse } from ".";
+import { EntityItem } from "electrodb";
 
-type TodoResponse = {
-    userId: string;
-    todoId: string;
-    title: string;
-    completed: boolean;
-    createdAt: string;
-    updatedAt: string;
-};
-
-export default publicProcedure
+export default authenticatedProcedure
     .input(
         z.object({
             todoId: z.string(),
@@ -19,18 +13,28 @@ export default publicProcedure
             completed: z.boolean(),
         }),
     )
-    .mutation(async (args) => {
-        const updateTodoResponse = await Todo.update({
-            userId: args.ctx.user.userId,
-            createdAt: args.input.createdAt,
-            todoId: args.input.todoId,
-        })
-            .set({
-                completed: args.input.completed,
+    .mutation<TodoResponse>(async ({ input, ctx }) => {
+        try {
+            const updateTodoResponse = await Todo.update({
+                userId: ctx.user.userId,
+                createdAt: input.createdAt,
+                todoId: input.todoId,
             })
-            .go({
-                response: "all_new",
-            });
+                .set({
+                    completed: input.completed,
+                })
+                .go({
+                    response: "all_new",
+                });
 
-        return updateTodoResponse.data as TodoResponse;
+            return todoItemToResponse(
+                updateTodoResponse.data as EntityItem<typeof Todo>,
+            );
+        } catch (error) {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message:
+                    error instanceof Error ? error.message : "Unknown error",
+            });
+        }
     });

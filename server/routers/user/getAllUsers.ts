@@ -1,16 +1,17 @@
 import { User } from "@db/services/Todo/models/User";
-import { publicProcedure } from "../../trpc";
+import { authenticatedProcedure } from "../../trpc";
+import { TRPCError } from "@trpc/server";
+import { userItemToResponse, UserResponse } from ".";
 
-type UserResponse = {
-    userId: string;
-    name: string;
-};
+export default authenticatedProcedure.query<UserResponse[]>(async () => {
+    try {
+        const usersResponse = await User.scan.go();
 
-export default publicProcedure.query(async () => {
-    const usersResponse = await User.scan.go();
-
-    return usersResponse.data.map(({ userId, name }) => ({
-        userId,
-        name,
-    })) as UserResponse[];
+        return usersResponse.data.map(userItemToResponse);
+    } catch (error) {
+        throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: error instanceof Error ? error.message : "Unknown error",
+        });
+    }
 });
