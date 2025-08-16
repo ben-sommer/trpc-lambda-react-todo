@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient, trpc } from "../../../lib/trpc";
-import Spinner from "../../../components/ui/Spinner";
+import Spinner from "@components/ui/Spinner";
 import { useForm } from "@tanstack/react-form";
-import { Input } from "../../../components/ui/Input";
-import FieldInfo from "../../../components/ui/FieldInfo";
-import { Button } from "../../../components/ui/Button";
+import { Input } from "@components/ui/Input";
+import FieldInfo from "@components/ui/FieldInfo";
+import { Button } from "@components/ui/Button";
 
 export default function AddTodoForm() {
     const addTodoMutation = useMutation(

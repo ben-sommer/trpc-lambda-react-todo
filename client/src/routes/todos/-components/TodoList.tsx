@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { trpc } from "../../../lib/trpc";
-import Spinner from "../../../components/ui/Spinner";
+import Spinner from "@components/ui/Spinner";
 import AddTodoForm from "./AddTodoForm";
 import Todo from "./Todo";
 
