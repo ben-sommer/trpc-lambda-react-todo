@@ -1,14 +1,9 @@
-import { inferRouterOutputs } from "@trpc/server";
-import { AppRouter } from "../../../../../server";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient, trpc } from "@/lib/trpc";
 import { useCallback } from "react";
+import { TodoResponse } from "../../../../../server/routers/todo";
 
-export default function Todo({
-    todo,
-}: {
-    todo: inferRouterOutputs<AppRouter>["todo"]["getTodos"][number];
-}) {
+export default function Todo({ todo }: { todo: TodoResponse }) {
     const updateTodoMutation = useMutation(
         trpc.todo.updateTodo.mutationOptions({
             onSuccess: () => {
